@@ -1,0 +1,49 @@
+body {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+.tree-list:not(.tree-root) { 
+    padding-left: 20px; 
+}
+.folder::before { content: "\f07b "; font-family: 'Font Awesome 5 Free'; font-weight: 900; color: #FFD700 }
+.folder-open::before { content: "\f115 "; font-family: 'Font Awesome 5 Free'; font-weight: 900; color: #FFD700 !important }
+.file::before { content: "\f15b "; font-family: 'Font Awesome 5 Free'; font-weight: 900; color: #979797 }
+.file-modified::before { content: "\f31c "; font-family: 'Font Awesome 5 Free'; font-weight: 900; color: #4A90E2 !important }
+.context-menu {
+    position: absolute;
+    background: #2d2d2d;
+    border: 1px solid #555;
+    display: none;
+    z-index: 1000;
+}
+.context-menu div {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #ffffff;
+}
+.context-menu div:hover {
+    background-color: #444;
+}
+.folder,.file {
+    border: 1px solid #555;
+    background-color: #333;
+    margin: 3px;
+}
+.file, .folder{
+    cursor: pointer;
+    height: 100%;
+    padding: 3px;
+}
+.tree{
+    height: 100%;
+    width: 100%;
+}
+.highlighted {
+    background-color: rgb(29, 82, 112) !important;
+}
+#tree{
+    height: 100%;
+}

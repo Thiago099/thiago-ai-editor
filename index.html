@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <title>Thiago AI Editor</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+        <div class="button-container">
+          <button id="download"><i class="fa-solid fa-download"></i> Download</button>
+          <button id="upload"><i class="fa-solid fa-upload"></i> Upload</button>
+        </div>
+        <div id="tree"></div>
+      </div>
+      <div class="bottom">
+        <textarea type="text" id="chatInput" placeholder="Type your message here"></textarea>
+        <button id="chat">Modify</button>
+      </div>
+      <div id="editor"></div>
+      <div class="right">
+        <label for="address">LLM Server Address:</label>
+        <input type="text" value="http://127.0.0.1:8888" id="address">
+        <div id="history">
+        </div>
+      </div>
+      <script type="module" src="/src/main.js"></script>
+    </div>
+    <div id="popupContainer"></div>
+  </body>
+</html>

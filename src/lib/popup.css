@@ -1,0 +1,16 @@
+#popupContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow-y: auto;
+    padding-top: 15px;
+}
+.popup {
+    width: 100%;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,151 @@
+:root{
+  --main-color: #4c8baf;
+  --active-color: #2d97df;
+}
+.folder-children{
+  margin-left: 30px;
+}
+.file{
+  cursor: pointer;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-color: #444444;
+}
+.container{
+    width: 100vw;
+  height: 100vh;
+    display: grid;
+  grid-template-areas:
+    "left editor right"
+    "left bottom right";
+  grid-template-columns: 350px 1fr 350px;
+  grid-template-rows: 1fr 200px;
+  color: white;
+  gap: 5px; 
+  padding: 5px;
+}
+
+.right{
+  grid-area: right;
+  background-color: #1e1e1e;
+  padding: 10px;
+}
+
+.left{
+  grid-area: left;
+  background-color: #1e1e1e;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.bottom{
+  grid-area: bottom;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e1e1e;
+}
+
+#editor{
+  grid-area: editor;
+  width: 100%;
+  height: 100%;
+  background-color: #1e1e1e;
+  color: white;
+}
+
+#chatInput{
+  margin: 0;
+  width: 100%;
+  height: calc(100% - 20px);
+  margin: 10px;
+  background-color: #333333;
+  color: white;
+  border: 1px solid #555;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+#chat{
+  margin: 0;
+  width: 120px;
+  height: 80px;
+  margin: 10px;
+  background-color: var(--main-color);
+  color: white;
+  border: 1px solid #555;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button {
+  background-color: var(--main-color);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 3px;
+  margin: 8px;
+}
+.button-container{
+  width: 100%;
+  display: flex;
+  justify-content:center;
+}
+
+button:hover, #chat:hover {
+  background-color: var(--active-color);
+}
+
+.button-blue{
+  background-color: var(--main-color);
+}
+
+.button-blue:hover {
+  background-color: #4586a0;
+}
+
+.disabled{
+  opacity: 0.1 !important;
+  pointer-events: none !important;
+}
+
+#chatInput{
+  resize: none;
+  outline: none;
+}
+
+input, #chatInput  {
+  padding: 8px;
+  border: 1px solid #555;
+  background-color: #333333;
+  color: white;
+    border-radius: 4px;
+  outline: none;
+  width: 100%;
+}
+input:focus, #chatInput:focus {
+  border-color: var(--active-color);
+  box-shadow: 0 0 2px rgba(76, 171, 189, 0.5);
+}
+
+.selected{
+  color: #6fb8e9;
+}
+.selected > *::before{
+  content: "> ";
+}
+
+.history-item:not(.selected){
+  cursor: pointer;
+}
