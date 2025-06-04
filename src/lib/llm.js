@@ -5,14 +5,7 @@ import { Popup } from './popup.js';
 
 async function sendPostRequest(url, data) {
   try {
-    const response = await axios.post(url, data, {
-        withCredentials: true,
-        headers: {                  
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
-          "Content-Type": "application/json;charset=UTF-8"                   
-      },
-    });
+    const response = await axios.post(url, data);
     return response.data;
   } catch (error) {
     console.error('Error sending POST request:',error);
