@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/thiago-ai-editor/monacoeditorwork/editor.worker.bundle.js",
+  "css": "/thiago-ai-editor/monacoeditorwork/css.worker.bundle.js",
+  "html": "/thiago-ai-editor/monacoeditorwork/html.worker.bundle.js",
+  "json": "/thiago-ai-editor/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/thiago-ai-editor/monacoeditorwork/ts.worker.bundle.js",
+  "javascript": "/thiago-ai-editor/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/thiago-ai-editor/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/thiago-ai-editor/monacoeditorwork/css.worker.bundle.js",
+  "handlebars": "/thiago-ai-editor/monacoeditorwork/html.worker.bundle.js",
+  "razor": "/thiago-ai-editor/monacoeditorwork/html.worker.bundle.js"
+});</script>
+
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/thiago-ai-editor/icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/thiago-ai-editor/manifest.json">
+    <title>Thiago AI Editor</title>
+    <script type="module" crossorigin src="/thiago-ai-editor/assets/index-Dwnzuu9G.js"></script>
+    <link rel="stylesheet" crossorigin href="/thiago-ai-editor/assets/index-CoiV_MG9.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+        <div class="button-container">
+          <button id="download"><i class="fa-solid fa-download"></i> Download</button>
+          <button id="upload"><i class="fa-solid fa-upload"></i> Upload</button>
+        </div>
+        <div id="tree"></div>
+      </div>
+      <div class="bottom">
+        <textarea type="text" id="chatInput" placeholder="Type your message here"></textarea>
+        <button id="chat">Modify</button>
+      </div>
+      <div id="editor"></div>
+      <div class="right">
+        <label for="address">LLM Server Address:</label>
+        <input type="text" value="http://127.0.0.1:8888" id="address">
+        <div id="history">
+        </div>
+      </div>
+    </div>
+    <div id="popupContainer"></div>
+  </body>
+</html>
