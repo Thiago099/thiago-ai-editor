@@ -8,7 +8,7 @@ const download = document.querySelector('#download')
 const upload = document.querySelector('#upload')
 const address = document.querySelector('#address')
 const history = document.querySelector('#history')
-
+const chatInput = document.querySelector('#chatInput')
 const editor = new AIEditor(editorElement, history)
 
 
@@ -21,15 +21,20 @@ address.addEventListener('input', () => {
 localStorage.setItem('editorAddress', address.value);
 });
 
-
-
-chat.addEventListener("click", async e=>{
-    const current = document.querySelector('#chatInput').value
+async function sendPrompt() {
+    const current = chatInput.value
     const newContent = await FileSystemAI.change(address.value, editor.back().dir, current)
     if(newContent != null){
         editor.push(newContent, current)
     }
-})
+}
+chatInput.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+        sendPrompt()
+    }
+});
+
+chat.addEventListener("click",sendPrompt)
 
 download.addEventListener("click", ()=>{
     editor.Download();
