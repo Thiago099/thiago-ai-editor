@@ -1,84 +1,60 @@
-import { FolderNode, FileNode } from "../application/node.js";
-import fs from "fs"
-import path from "path"
-import {XML} from "./xml.js"
-function getFolderAsXML(folderPath) {
-  const result = [];
-  try {
-    const items = fs.readdirSync(folderPath);
-    for (const item of items) {
-      const fullPath = path.join(folderPath, item);
-      const stat = fs.statSync(fullPath);
+import { FileNode, FolderNode } from "../application/node.js"
+import { XML } from "./xml.js"
 
-      if (stat.isDirectory()) {
-        result.push(`<folder folderName="${item}">`);
-        result.push(getFolderAsXML(fullPath));
-        result.push(`</folder>`);
-      } else {
-        const content = fs.readFileSync(fullPath, 'utf-8');
-        result.push(`<file fileName="${item}">`);
-        result.push(content);
-        result.push(`</file>`);
+
+function parseAST(input) {
+  const root = new FolderNode("root", [])
+
+  for (const item of input) {
+    if (item.tag !== "file") continue
+
+    const fullPath = item.parameters.fullPath
+    const parts = fullPath.split("/")
+    const fileName = parts.pop()
+
+    let current = root
+    for (const part of parts) {
+      let next = current.children.find(child => child instanceof FolderNode && child.name === part)
+      if (!next) {
+        next = new FolderNode(part, [])
+        current.children.push(next)
       }
+      current = next
     }
-  } catch (err) {
-    console.log(err)
-    return '';
+
+    current.children.push(new FileNode(fileName, item.content))
   }
 
-  return result.join('\n');
+  return root.children
 }
 
-function parseAST(input){
-  console.log(input)
-  const result = []
-  for(const item of input){
-    if(item.tag == "folder"){
-      result.push(new FolderNode(item.parameters.folderName, parseAST(item.children)))
-    }
-    else if(item.tag == "file"){
-      result.push(new FileNode(item.parameters.fileName, item.content))
-    }
-  }
-  return result
-}
-function jsonToXml(node) {
-  let result = "";
-
-  // Start tag with appropriate attribute based on type
+function jsonToXml(node, currentPath = "") {
   if (node.type === "file") {
-    result += `<file fileName="${node.name}">`;
-    result += node.content;
-    result += `</file>`;
-  } else if (node.type === "folder") {
-    result += `<folder folderName="${node.name}">`;
-
-    // Process each child recursively
-    if (Array.isArray(node.children)) {
-      for (const child of node.children) {
-        result += jsonToXml(child);
-      }
-    }
-
-    result += `</folder>`;
+    const filePath = (currentPath ? currentPath + "/" : "") + node.name
+    return `<file fullPath="${filePath}">${node.content}</file>`
   }
 
-  return result;
+  if (node.type === "folder") {
+    const newPath = (currentPath ? currentPath + "/" : "") + node.name
+    return node.children.map(child => jsonToXml(child, newPath)).join("")
+  }
+
+  return ""
 }
 
-class Folder{
-    static GetRaw(path){
-      return getFolderAsXML(path)
-    }
-    static Get(path){
-        return this.Parse(getFolderAsXML(path))
-    }
-    static FromJson(json){
-      return json.map(jsonToXml)
-    }
-    static Parse(str){
-      return parseAST(XML.Parse(str, "file", "folder"))
-    }
+class Folder {
+  static GetRaw(path) {
+    return getFilesAsXML(path)
+  }
+  static Get(path) {
+    return this.Parse(getFilesAsXML(path))
+  }
+  static FromJson(json) {
+    return json.map(jsonToXml)
+  }
+  static Parse(str) {
+    return parseAST(XML.Parse(str, "file"))
+  }
 }
 
 export { Folder }
