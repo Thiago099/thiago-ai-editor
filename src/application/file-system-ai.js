@@ -11,6 +11,7 @@ You will receive zero or more <file> tags (each representing a complete file), a
     Instructions describing the actions to perform, possibly involving the provided files or the creation of new ones.
 </task>
 
+You must provide the full contents of any files in your response.
 Your response must include only the files that need to be changed or created, using the same <file> XML format. Do not include any other text or explanation.
 `
 
