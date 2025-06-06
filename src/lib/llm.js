@@ -1,4 +1,3 @@
-import fs from "fs"
 import axios from 'axios';
 import { Color } from "./color.js";
 async function sendPostRequest(url, data) {
