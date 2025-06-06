@@ -1,16 +1,13 @@
-
+import fs from "fs"
 import axios from 'axios';
 import { Color } from "./color.js";
-import { Popup } from './popup.js';
-
 async function sendPostRequest(url, data) {
   try {
     const response = await axios.post(url, data);
     return response.data;
   } catch (error) {
-    console.error('Error sending POST request:',error);
-    Popup.Show("An error occurred while sending the POST request: "+error, Popup.colorError);
-    return null
+    console.error('Error sending POST request:', error);
+    throw error;
   }
 }
 
@@ -32,7 +29,12 @@ class LLM {
             }
         ]
     }
-
+    PromptForget(prompt){
+        const llm = new LLM(this.system, ...this.functions)
+        llm["json_schema"] = this["json_schema"]
+        llm.User(prompt)
+        return llm.Continue()
+    }
     Tool({name, id, message}){
         if(this.verbose) {
             console.log(Color.FgCyan("Result from command "+name+" to ai: \n" + message))
@@ -56,17 +58,19 @@ class LLM {
     }
 
     async Continue(toolChoice="auto"){
-
-        const response = await sendPostRequest(this.chatUrl,
-        {
+        const request = {
             "messages": this.history,
             "tools": this.functions.map(x=>x.get()),
             "tool_choice": toolChoice
-        })
-
-        if(response == null){
-            return null
         }
+        if(this["json_schema"]){
+            request["response_format"] = {
+                'type': 'json_schema',
+                'json_schema': this["json_schema"]
+            }
+        }
+
+        const response = await sendPostRequest(this.chatUrl,request)
 
 
         const calls = response?.choices?.at(0)?.message?.tool_calls ?? []

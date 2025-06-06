@@ -4,7 +4,7 @@ import { LLM } from "../lib/llm.js"
 const system = `
 You will receive zero or more <file> tags (each representing a complete file), and one <task> tag describing the task you must perform.
 
-<file fullPath="full/path/name.ext">
+<file filePath="oath/to/file.ext">
     The full contents of the file
 </file>
 <task>
@@ -12,13 +12,38 @@ You will receive zero or more <file> tags (each representing a complete file), a
 </task>
 
 You must provide the full contents of any files in your response.
-Your response must include only the files that need to be changed or created, using the same <file> XML format. Do not include any other text or explanation.
+Reply with files to solve the user issue.
 `
+const schema = {
+    'name': 'file_system',
+    'strict': true,
+    'schema': {
+        'type': 'array',
+        'items':  {
+        'type': 'object',
+            'properties': {
+                'path': {
+                    'type': 'string',
+                    'description': 'The path of the modified or created file'
+                },
+                'contents': {
+                    'type': 'string',
+                    'description': 'The full contents of the modified file'
+                },
+            },
+            'required': ['path', 'contents'],
+        },
+        'description': 'A list of all the files that must be created or modified'
+    }
+}
 
 class FileSystemAI{
     static async change(url, ctx, task){
         try{
             const llm = new LLM(system, url)
+
+            llm["json_schema"] = schema
+
             llm.User(`${Folder.FromJson(ctx)}\n<task>\n${task}\n</task>`)
             const message = await llm.Continue()
             if(message == null){

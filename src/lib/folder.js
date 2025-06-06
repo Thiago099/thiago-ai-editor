@@ -1,14 +1,10 @@
 import { FileNode, FolderNode } from "../application/node.js"
-import { XML } from "./xml.js"
 
 
 function parseAST(input) {
   const root = new FolderNode("root", [])
-
   for (const item of input) {
-    if (item.tag !== "file") continue
-
-    const fullPath = item.parameters.fullPath
+    const fullPath = item.path
     const parts = fullPath.split("/")
     const fileName = parts.pop()
 
@@ -22,7 +18,7 @@ function parseAST(input) {
       current = next
     }
 
-    current.children.push(new FileNode(fileName, item.content))
+    current.children.push(new FileNode(fileName, item.contents))
   }
 
   return root.children
@@ -31,7 +27,7 @@ function parseAST(input) {
 function jsonToXml(node, currentPath = "") {
   if (node.type === "file") {
     const filePath = (currentPath ? currentPath + "/" : "") + node.name
-    return `<file fullPath="${filePath}">${node.content}</file>`
+    return `<file filePath="${filePath}">${node.content}</file>`
   }
 
   if (node.type === "folder") {
@@ -43,17 +39,11 @@ function jsonToXml(node, currentPath = "") {
 }
 
 class Folder {
-  static GetRaw(path) {
-    return getFilesAsXML(path)
-  }
-  static Get(path) {
-    return this.Parse(getFilesAsXML(path))
-  }
   static FromJson(json) {
     return json.map(jsonToXml)
   }
   static Parse(str) {
-    return parseAST(XML.Parse(str, "file"))
+    return parseAST(JSON.parse(str))
   }
 }
 
