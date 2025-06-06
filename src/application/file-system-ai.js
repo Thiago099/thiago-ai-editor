@@ -4,7 +4,7 @@ import { LLM } from "../lib/llm.js"
 const system = `
 You will receive zero or more <file> tags (each representing a complete file), and one <task> tag describing the task you must perform.
 
-<file filePath="oath/to/file.ext">
+<file filePath="path/to/file.ext">
     The full contents of the file
 </file>
 <task>
