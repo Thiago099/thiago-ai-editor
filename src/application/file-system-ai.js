@@ -3,16 +3,13 @@ import { LLM } from "../lib/llm.js"
 
 const system = `
 You will receive zero or more <file> tags (each representing a complete file), and one <task> tag describing the task you must perform.
-
-<file filePath="path/to/file.ext">
+<file filePath="The path to the file">
     The full contents of the file
 </file>
 <task>
     Instructions describing the actions to perform, possibly involving the provided files or the creation of new ones.
 </task>
-
-You must provide the full contents of any files in your response.
-Reply with files to solve the user issue.
+You must reply with the new files or the full new contents of the current files
 `
 const schema = {
     'name': 'file_system',
@@ -22,16 +19,17 @@ const schema = {
         'items':  {
         'type': 'object',
             'properties': {
-                'path': {
+                'filePath': {
                     'type': 'string',
                     'description': 'The path of the modified or created file'
                 },
-                'contents': {
+                'fileContent': {
                     'type': 'string',
                     'description': 'The full contents of the modified file'
                 },
             },
-            'required': ['path', 'contents'],
+            'description': 'A file that must be created or modified',
+            'required': ['filePath', 'fileContent'],
         },
         'description': 'A list of all the files that must be created or modified'
     }

@@ -4,7 +4,7 @@ import { FileNode, FolderNode } from "../application/node.js"
 function parseAST(input) {
   const root = new FolderNode("root", [])
   for (const item of input) {
-    const fullPath = item.path
+    const fullPath = item.filePath
     const parts = fullPath.split("/")
     const fileName = parts.pop()
 
@@ -18,7 +18,7 @@ function parseAST(input) {
       current = next
     }
 
-    current.children.push(new FileNode(fileName, item.contents))
+    current.children.push(new FileNode(fileName, item.fileContent))
   }
 
   return root.children
